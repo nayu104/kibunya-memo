@@ -28,8 +28,6 @@ class _MoodSelectorState extends State<MoodSelector> {
           },
           child: Container(
             width: 120,
-            // allow the card to grow when the label wraps to multiple lines,
-            // but keep a reasonable minimum height so layout stays consistent
             constraints: const BoxConstraints(minHeight: 72),
             decoration: BoxDecoration(
               color: isSelected ? m.color : Colors.white,
@@ -53,8 +51,6 @@ class _MoodSelectorState extends State<MoodSelector> {
               children: [
                 Text(m.emoji, style: const TextStyle(fontSize: 22)),
                 const SizedBox(height: 6),
-                // allow label to wrap to up to 2 lines and center it to avoid
-                // vertical overflow when text is long
                 Text(
                   m.label,
                   textAlign: TextAlign.center,

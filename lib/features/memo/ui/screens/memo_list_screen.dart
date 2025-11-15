@@ -1,60 +1,119 @@
 import 'package:flutter/material.dart';
-import '../../domain/models/memo.dart';
-import '../../domain/models/mood.dart';
+import 'package:provider/provider.dart';
 import '../widgets/memo_card.dart';
+import '../../../../core/state/memo_notifier.dart';
+import '../widgets/new_memo_modal.dart';
 
 class MemoListScreen extends StatelessWidget {
   const MemoListScreen({super.key});
 
-  List<Memo> _sample() {
-    return [
-      Memo(id: '1', title: 'Flutter勉強', body: 'State管理を学んだ', mood: Mood.happy),
-      Memo(id: '2', title: 'ゼミのメモ', body: '今日の発表', mood: Mood.calm),
-      Memo(id: '3', title: '体調メモ', body: 'ちょっとしんどい', mood: Mood.tired),
-      Memo(id: '4', title: 'やること', body: 'サイドプロジェクト', mood: Mood.fired),
-    ];
-  }
-
   @override
   Widget build(BuildContext context) {
-    final items = _sample();
+    final notifier = context.watch<MemoNotifier>();
+    final items = notifier.items;
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('気分×色メモ'),
-        actions: const [Padding(padding: EdgeInsets.only(right: 8.0))],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search),
-                hintText: '検索',
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
+      backgroundColor: Colors.grey[100],
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Large title row
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 18,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'メモ',
+                    style: TextStyle(fontSize: 34, fontWeight: FontWeight.w700),
+                  ),
+                  TextButton(onPressed: () {}, child: const Text('編集')),
+                ],
+              ),
+            ),
+
+            // Search field
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const ListTile(
+                  leading: Icon(Icons.search, color: Colors.black38),
+                  title: Text('検索', style: TextStyle(color: Colors.black38)),
                 ),
               ),
             ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: ListView.separated(
-                itemBuilder: (context, index) => MemoCard(memo: items[index]),
-                separatorBuilder: (_, __) => const SizedBox(height: 12),
-                itemCount: items.length,
-              ),
+
+            const SizedBox(height: 12),
+
+            // Content
+            Expanded(
+              child: notifier.loading
+                  ? const Center(child: CircularProgressIndicator())
+                  : items.isEmpty
+                  ? Center(
+                      child: SizedBox(
+                        width: 320,
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(28),
+                            child: Column(
+                              children: const [
+                                Icon(
+                                  Icons.insert_drive_file_outlined,
+                                  size: 40,
+                                  color: Colors.black26,
+                                ),
+                                SizedBox(height: 12),
+                                Text(
+                                  'まだメモがありません',
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                SizedBox(height: 6),
+                                Text(
+                                  '「+」ボタンから始めましょう',
+                                  style: TextStyle(color: Colors.black45),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : ListView.separated(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      itemBuilder: (context, index) =>
+                          MemoCard(memo: items[index]),
+                      separatorBuilder: (_, __) => const SizedBox(height: 10),
+                      itemCount: items.length,
+                    ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
+        onPressed: () => _openNewMemo(context),
+        backgroundColor: Colors.white,
+        child: const Icon(Icons.add, color: Colors.blue),
+      ),
+    );
+  }
+
+  void _openNewMemo(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (_) => const NewMemoModal(),
       ),
     );
   }
