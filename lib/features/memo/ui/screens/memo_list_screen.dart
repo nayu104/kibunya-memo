@@ -27,11 +27,17 @@ class MemoListScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'メモ',
-                    style: TextStyle(fontSize: 34, fontWeight: FontWeight.w700),
+                  Stack(
+                    children: [
+                      const Text(
+                        'メモ',
+                        style: TextStyle(
+                          fontSize: 34,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
                   ),
-                  TextButton(onPressed: () {}, child: const Text('編集')),
                 ],
               ),
             ),
