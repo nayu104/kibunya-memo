@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../widgets/memo_card.dart';
 import '../../../../core/state/memo_notifier.dart';
 import '../widgets/new_memo_modal.dart';
+import '../widgets/contact_url.dart';
 
 class MemoListScreen extends StatelessWidget {
   const MemoListScreen({super.key});
@@ -14,7 +15,7 @@ class MemoListScreen extends StatelessWidget {
 
     return Scaffold(
       // backgroundColor: Colors.grey[100],
-      appBar: AppBar(title: const Text('メモ一覧')),
+      appBar: AppBar(title: const Text('メモ一覧'), actions: const [ContactUrl()]),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
