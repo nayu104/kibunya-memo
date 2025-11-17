@@ -14,12 +14,24 @@ class MemoListScreen extends StatelessWidget {
     final items = notifier.items;
 
     return Scaffold(
-      // backgroundColor: Colors.grey[100],
-      appBar: AppBar(title: const Text('メモ一覧'), actions: const [ContactUrl()]),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Search field
+          SafeArea(
+            child: Row(
+              children: [
+                SizedBox(width: 16),
+                Text(
+                  'メモ一覧',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                //   Image.asset('assets/images/logo.png', width: 2, height: 2),
+                Spacer(),
+                const ContactUrl(),
+                SizedBox(width: 16),
+              ],
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Container(
@@ -38,39 +50,26 @@ class MemoListScreen extends StatelessWidget {
 
           // Content
           Expanded(
-            child: notifier.loading
-                ? const Center(child: CircularProgressIndicator())
-                : items.isEmpty
-                ? Center(
-                    child: SizedBox(
-                      width: 320,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(28),
-                          child: Column(
-                            children: const [
-                              Icon(
-                                Icons.insert_drive_file_outlined,
-                                size: 40,
-                                color: Colors.black26,
-                              ),
-                              SizedBox(height: 12),
-                              Text(
-                                'まだメモがありません',
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              SizedBox(height: 6),
-                              Text(
-                                '「+」ボタンから始めましょう',
-                                style: TextStyle(color: Colors.black45),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+            // ここだけ差し替え
+            child: Stack(
+              children: [
+                // 背景画像（常に表示）
+                Positioned.fill(
+                  child: Opacity(
+                    opacity: 0.15, // 薄くしたいなら調整
+                    child: Image.asset('assets/images/memomemo.png'),
+                  ),
+                ),
+
+                // 前面コンテンツ
+                if (notifier.loading)
+                  const Center(child: CircularProgressIndicator())
+                else if (items.isEmpty)
+                  const Center(
+                    child: Text('まだメモがありません'), // 好きな文言に変えていい
                   )
-                : ListView.separated(
+                else
+                  ListView.separated(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 8,
@@ -80,6 +79,8 @@ class MemoListScreen extends StatelessWidget {
                     separatorBuilder: (_, __) => const SizedBox(height: 10),
                     itemCount: items.length,
                   ),
+              ],
+            ),
           ),
         ],
       ),

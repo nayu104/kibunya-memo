@@ -28,11 +28,8 @@ class ContactUrl extends StatelessWidget {
       child: InkWell(
         onTap: _launchDocs, // タップしたらURLを開く
         child: const Text(
-          'お問い合わせ・ご要望はこちら',
-          style: TextStyle(
-            color: Colors.blue, // リンクっぽい色
-            decoration: TextDecoration.underline, // 下線
-          ),
+          'お問い合わせ\nご要望はこちら',
+          style: TextStyle(color: Colors.blue),
         ),
       ),
     );
