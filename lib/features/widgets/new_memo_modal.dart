@@ -34,6 +34,7 @@ class _NewMemoModalState extends State<NewMemoModal> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        leadingWidth: 100,
         leading: TextButton(
           onPressed: () => navigator.pop(),
           child: const Text('キャンセル', style: TextStyle(color: Colors.blue)),
