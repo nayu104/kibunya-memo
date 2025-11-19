@@ -6,13 +6,13 @@ extension MoodProps on Mood {
   String get label {
     switch (this) {
       case Mood.happy:
-        return '嬉しい';
+        return '嬉しい!!';
       case Mood.calm:
-        return '落ち着いている';
+        return '落ち着いている。';
       case Mood.tired:
-        return 'しんどい';
+        return 'しんどい...';
       case Mood.fired:
-        return 'やる気MAX';
+        return 'やる気フルMAX!!!';
     }
   }
 
