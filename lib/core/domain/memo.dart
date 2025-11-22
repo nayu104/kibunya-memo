@@ -1,38 +1,30 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'mood.dart';
 
-class Memo {
-  final String id;
-  final String title;
-  final String body;
-  final Mood mood;
-  final DateTime createdAt;
+part 'memo.freezed.dart';
+part 'memo.g.dart';
 
-  Memo({
-    required this.id,
-    required this.title,
-    this.body = '',
-    this.mood = Mood.calm,
-    DateTime? createdAt,
-  }) : createdAt = createdAt ?? DateTime.now();
+@freezed
+class Memo with _$Memo {
+  const Memo._();
 
-  factory Memo.fromJson(Map<String, dynamic> json) {
-    return Memo(
-      id: json['id'] as String,
-      title: json['title'] as String,
-      body: json['body'] as String? ?? '',
-      mood: Mood.values.firstWhere(
-        (m) => m.toString() == json['mood'],
-        orElse: () => Mood.calm,
-      ),
-      createdAt: DateTime.parse(json['createdAt'] as String),
-    );
+  // ローカル保存用なので、DateTimeのままでOK（勝手に文字列になる）
+  //データを保管するために使う（過去の時間をそのまま持つ）
+  const factory Memo({
+    required String id,
+    @Default('') String body,
+    @Default(Mood.calm) Mood mood,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _Memo;
+  // データを生み出すために使う（今の時間をセットする）
+  factory Memo.create({
+    required String id,
+    String body = '',
+    Mood mood = Mood.calm,
+  }) {
+    final now = DateTime.now();
+    return Memo(id: id, body: body, mood: mood, createdAt: now, updatedAt: now);
   }
-
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'title': title,
-    'body': body,
-    'mood': mood.toString(),
-    'createdAt': createdAt.toIso8601String(),
-  };
+  factory Memo.fromJson(Map<String, dynamic> json) => _$MemoFromJson(json);
 }

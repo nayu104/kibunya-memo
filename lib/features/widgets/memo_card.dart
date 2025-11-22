@@ -1,27 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memomemo/core/domain/memo.dart';
-import 'package:memomemo/core/domain/mood.dart';
-import '../../../../core/state/memo_notifier.dart';
+import '../../core/state/memo_notifier.dart';
 import '../widgets/new_memo_modal.dart';
+import 'package:memomemo/core/domain/mood.dart';
 
-class MemoCard extends StatelessWidget {
+class MemoCard extends ConsumerWidget {
   final Memo memo;
   const MemoCard({super.key, required this.memo});
 
-  String _formatDate(DateTime dt) {
-    final d = dt.toLocal();
-    final y = d.year.toString();
-    final m = d.month.toString().padLeft(2, '0');
-    final day = d.day.toString().padLeft(2, '0');
-    return '$y/$m/$day';
-  }
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Dismissible(
       key: ValueKey(memo.id),
-      direction: DismissDirection.startToEnd, // swipe right to delete
+      direction: DismissDirection.startToEnd,
       background: Container(
         padding: const EdgeInsets.only(left: 20),
         decoration: BoxDecoration(
@@ -31,22 +23,28 @@ class MemoCard extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: const Icon(Icons.delete, color: Colors.white),
       ),
-      onDismissed: (direction) async {
-        final notifier = context.read<MemoNotifier>();
-        final messenger = ScaffoldMessenger.of(context);
-        final removed = await notifier.delete(memo.id);
-        messenger.clearSnackBars();
-        messenger.showSnackBar(
-          SnackBar(
-            content: const Text('メモを削除しました'),
-            action: SnackBarAction(
-              label: '元に戻す',
-              onPressed: () async {
-                if (removed != null) await notifier.update(removed);
-              },
+      onDismissed: (_) {
+        final notifier = ref.read(memoNotifierProvider.notifier);
+
+        // 削除実行 (Future<Memo?> が返ってくる)
+        notifier.delete(memo.id).then((removedMemo) {
+          if (removedMemo == null) return;
+          if (!context.mounted) return;
+
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('メモを削除しました'),
+              action: SnackBarAction(
+                label: '元に戻す',
+                onPressed: () {
+                  // 簡易的な復元: 同じ内容で新規作成する
+                  notifier.add(body: removedMemo.body, mood: removedMemo.mood);
+                },
+              ),
             ),
-          ),
-        );
+          );
+        });
       },
       child: InkWell(
         onTap: () => Navigator.of(context).push(
@@ -59,11 +57,12 @@ class MemoCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.shade200), // 薄い枠線を追加
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          padding: const EdgeInsets.all(12),
           child: Row(
             children: [
-              // color badge
+              // Color badge
               Container(
                 width: 14,
                 height: 14,
@@ -73,45 +72,41 @@ class MemoCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              // title and preview
+
+              // Body preview
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      memo.title,
+                      memo.body, // TitleではなくBodyを表示
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 6),
-                    // Text(
-                    //   memo.body,
-                    //   maxLines: 1,
-                    //   overflow: TextOverflow.ellipsis,
-                    //   style: const TextStyle(color: Colors.black54),
-                    // ),
+                    Text(
+                      _formatDate(memo.updatedAt),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                    ),
                   ],
                 ),
-              ),
-              const SizedBox(width: 12),
-              // date and chevron
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    _formatDate(memo.createdAt),
-                    style: const TextStyle(fontSize: 12, color: Colors.black45),
-                  ),
-                  const SizedBox(height: 6),
-                  const Icon(Icons.chevron_right, color: Colors.black38),
-                ],
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  String _formatDate(DateTime dt) {
+    final d = dt.toLocal();
+    final y = d.year.toString();
+    final m = d.month.toString().padLeft(2, '0');
+    final day = d.day.toString().padLeft(2, '0');
+    return '$y/$m/$day';
   }
 }

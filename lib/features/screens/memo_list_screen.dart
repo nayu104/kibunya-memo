@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/state/memo_notifier.dart'; // パス確認
 import '../widgets/memo_card.dart';
-import '../../../../core/state/memo_notifier.dart';
 import '../widgets/new_memo_modal.dart';
 
-import 'setting_screen.dart';
-
-class MemoListScreen extends StatelessWidget {
+class MemoListScreen extends ConsumerWidget {
   const MemoListScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final notifier = context.watch<MemoNotifier>();
-    final items = notifier.items;
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Riverpodの状態監視 (AsyncValue<List<Memo>>)
+    final asyncMemos = ref.watch(memoNotifierProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -20,17 +18,16 @@ class MemoListScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (_) => SettingScreen()));
+              // Navigator.of(context).push(MaterialPageRoute(builder: (_) => SettingScreen()));
             },
-            icon: Icon(Icons.settings, color: Colors.black),
+            icon: const Icon(Icons.settings, color: Colors.black),
           ),
         ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // 検索バー (機能は未実装の見た目だけ)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Container(
@@ -44,46 +41,51 @@ class MemoListScreen extends StatelessWidget {
               ),
             ),
           ),
-
           const SizedBox(height: 12),
 
-          // Content
+          // コンテンツエリア
           Expanded(
             child: Stack(
               children: [
-                // 背景画像（常に表示）
+                // 背景画像
                 Positioned.fill(
                   child: Opacity(
-                    opacity: 0.15, // 薄くしたいなら調整
+                    opacity: 0.15,
                     child: Image.asset('assets/images/memomemo.png'),
                   ),
                 ),
 
-                // 前面コンテンツ
-                if (notifier.loading)
-                  const Center(child: CircularProgressIndicator())
-                else if (items.isEmpty)
-                  const Center(child: Text('まだメモがありません'))
-                else
-                  ListView.separated(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    itemBuilder: (context, index) =>
-                        MemoCard(memo: items[index]),
-                    separatorBuilder: (_, __) => const SizedBox(height: 10),
-                    itemCount: items.length,
-                  ),
+                // Riverpodの状態による分岐
+                asyncMemos.when(
+                  data: (items) {
+                    if (items.isEmpty) {
+                      return const Center(child: Text('まだメモがありません'));
+                    }
+                    return ListView.separated(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      itemCount: items.length,
+                      itemBuilder: (context, index) =>
+                          MemoCard(memo: items[index]),
+                      separatorBuilder: (_, __) => const SizedBox(height: 10),
+                    );
+                  },
+                  error: (err, stack) =>
+                      Center(child: Text('エラーが発生しました: $err')),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                ),
               ],
             ),
           ),
         ],
       ),
-
       floatingActionButton: FloatingActionButton(
         onPressed: () => _openNewMemo(context),
-        child: const Icon(Icons.add, color: Colors.blue),
+        child: const Icon(Icons.add, color: Colors.white), // アイコン白の方が見やすいかも
+        backgroundColor: Colors.blue,
       ),
     );
   }

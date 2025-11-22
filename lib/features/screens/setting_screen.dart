@@ -36,7 +36,7 @@ class SettingScreen extends StatelessWidget {
             title: 'バックアップ / 復元',
             subtitle: 'メモをエクスポート・インポートする',
             onTap: () {
-              // TODO: バックアップ画面へ遷移
+              // TODO: バックアップ画面へ遷移/広告をつける
             },
           ),
           _buildSettingTile(
