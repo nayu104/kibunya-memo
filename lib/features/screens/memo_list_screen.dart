@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/state/memo_notifier.dart'; // パス確認
+import '../../core/provider/memo_state.dart';
 import '../widgets/memo_card.dart';
 import '../widgets/new_memo_modal.dart';
 

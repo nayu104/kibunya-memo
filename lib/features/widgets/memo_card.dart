@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memomemo/core/domain/memo.dart';
-import '../../core/state/memo_notifier.dart';
 import '../widgets/new_memo_modal.dart';
 import 'package:memomemo/core/domain/mood.dart';
+import '../../core/provider/memo_state.dart';
 
 class MemoCard extends ConsumerWidget {
   final Memo memo;

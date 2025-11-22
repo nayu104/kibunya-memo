@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memomemo/core/domain/mood.dart';
 import 'package:memomemo/core/domain/memo.dart';
-import '../../core/state/memo_notifier.dart'; // パス確認
+import '../../core/provider/memo_state.dart';
 
 class NewMemoModal extends ConsumerStatefulWidget {
   final Memo? initial;

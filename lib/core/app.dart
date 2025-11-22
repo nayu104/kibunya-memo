@@ -7,8 +7,6 @@ class MemoMemoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Providerの登録処理は全て消滅。
-    // ここは純粋に MaterialApp を返すだけ。
     return MaterialApp(
       debugShowCheckedModeBanner: false, // 右上の帯を消す
       title: '気分×色メモ',
