@@ -92,4 +92,12 @@ class MemoNotifier extends AsyncNotifier<List<Memo>> {
 
     return target; // 削除したデータを呼び出し元に返す
   }
+
+  Future<void> deleteAll() async {
+    final repository = ref.read(memoRepositoryProvider);
+    // 1. リポジトリに削除命令（スマホのデータを消す）
+    await repository.deleteAll();
+    // 2. メモリ上の状態も空にする（画面を空っぽにする）
+    state = const AsyncData([]);
+  }
 }

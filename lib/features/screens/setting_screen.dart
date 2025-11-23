@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:memomemo/core/constants/app_urls.dart';
 import 'package:memomemo/core/app_colors.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:memomemo/core/provider/memo_state.dart';
 
-class SettingScreen extends StatelessWidget {
+class SettingScreen extends ConsumerWidget {
   const SettingScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // テーマから色とテキストスタイルをもらう
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+  Widget build(BuildContext context, WidgetRef ref) {
+    //  final theme = Theme.of(context);
+    // final colorScheme = theme.colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('設定'),
@@ -35,10 +37,51 @@ class SettingScreen extends StatelessWidget {
             context: context,
             icon: Icons.delete_forever,
             title: 'すべてのメモを削除',
-            // 赤色 (Error Color) を使う
-            titleColor: AppColors.delete,
-            onTap: () {
-              // TODO: 実装
+            titleColor: Theme.of(context).colorScheme.error,
+            onTap: () async {
+              // 1. ダイアログを表示し、ユーザーの決断を待つ (await)
+              // 削除なら true, キャンセルなら false (または null) が返ってくる
+              final shouldDelete = await showDialog<bool>(
+                context: context,
+                builder: (dialogContext) => AlertDialog(
+                  title: const Text('すべてのメモを削除'),
+                  content: const Text('本当にすべてのメモを削除しますか？\nこの操作は元に戻せません。'),
+                  actions: [
+                    TextButton(
+                      // キャンセルなら false を返して閉じる
+                      onPressed: () => Navigator.pop(dialogContext, false),
+                      child: const Text('キャンセル'),
+                    ),
+                    TextButton(
+                      // 削除なら true を返して閉じる
+                      onPressed: () => Navigator.pop(dialogContext, true),
+                      child: Text(
+                        '削除',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+
+              // 2. ダイアログが閉じた後の処理
+              // ユーザーが「削除」を選んだ場合のみ実行
+              if (shouldDelete == true) {
+                await ref.read(memoNotifierProvider.notifier).deleteAll();
+
+                // 3. フィードバックを表示 (SnackBar)
+                // 非同期処理の後なので、設定画面であるか確認(mounted)してから表示
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('すべてのメモを削除しました'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                }
+              }
             },
           ),
           const Divider(),
