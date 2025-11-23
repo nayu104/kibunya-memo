@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
-final ThemeData appTheme = ThemeData(
+ThemeData appTheme = ThemeData(
   useMaterial3: true,
 
   // 色設定
@@ -15,8 +15,7 @@ final ThemeData appTheme = ThemeData(
 
   // フォント設定
   fontFamily: GoogleFonts.yuseiMagic().fontFamily,
-
-  // テキスト設定
+  // テキスト設定 /
   textTheme: const TextTheme().apply(
     bodyColor: AppColors.textMain,
     displayColor: AppColors.textMain,
@@ -43,13 +42,13 @@ final ThemeData appTheme = ThemeData(
     shape: CircleBorder(),
   ),
   // Card設定
-  // cardTheme: CardThemeData(
-  //   color: Colors.white,
-  //   elevation: 0,
-  //   margin: EdgeInsets.zero,
-  //   shape: RoundedRectangleBorder(
-  //     borderRadius: BorderRadius.circular(12),
-  //     side: const BorderSide(color: Color(0xFFE0E0E0)),
-  //   ),
-  // ),
+  cardTheme: CardThemeData(
+    color: Colors.white,
+    elevation: 0,
+    margin: EdgeInsets.zero,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+      side: const BorderSide(color: Color(0xFFE0E0E0)),
+    ),
+  ),
 );

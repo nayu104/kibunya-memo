@@ -33,12 +33,12 @@ class _NewMemoModalState extends ConsumerState<NewMemoModal> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
+        // backgroundColor: Colors.white, // 削除（テーマに従う）
+        // elevation: 0, // 削除（テーマに従う）
         leadingWidth: 100,
         leading: TextButton(
           onPressed: () => navigator.pop(),
-          child: const Text('キャンセル'), // テーマで青色になるはず
+          child: const Text('キャンセル'),
         ),
         actions: [
           TextButton(

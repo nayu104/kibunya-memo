@@ -4,6 +4,7 @@ import 'package:memomemo/core/domain/memo.dart';
 import 'package:memomemo/core/domain/mood.dart';
 import '../../core/provider/memo_state.dart';
 import '../widgets/new_memo_modal.dart';
+import '../../core/app_colors.dart';
 
 class MemoCard extends ConsumerWidget {
   final Memo memo;
@@ -16,10 +17,10 @@ class MemoCard extends ConsumerWidget {
       direction: DismissDirection.endToStart,
       background: Container(),
       secondaryBackground: Container(
-        color: Color(0xFFFF8F00),
+        color: AppColors.delete,
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: const Icon(Icons.delete, color: Colors.white),
+        child: const Icon(Icons.delete, color: AppColors.onDelete),
       ),
       onDismissed: (_) {
         final notifier = ref.read(memoNotifierProvider.notifier);

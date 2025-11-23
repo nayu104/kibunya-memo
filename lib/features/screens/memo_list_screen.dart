@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/provider/memo_state.dart';
 import '../widgets/memo_card.dart';
 import '../widgets/new_memo_modal.dart';
+import 'setting_screen.dart';
 
 class MemoListScreen extends ConsumerWidget {
   const MemoListScreen({super.key});
@@ -18,9 +19,11 @@ class MemoListScreen extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () {
-              // Navigator.of(context).push(MaterialPageRoute(builder: (_) => SettingScreen()));
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const SettingScreen()));
             },
-            icon: const Icon(Icons.settings, color: Colors.black),
+            icon: const Icon(Icons.settings), // 色指定を削除（テーマに従う）
           ),
         ],
       ),

@@ -1,92 +1,91 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:memomemo/core/constants/app_urls.dart';
 
-/// 設定画面
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
+    // テーマから色とテキストスタイルをもらう
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Text(
-          '設定',
-          style: GoogleFonts.notoSans(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
+        title: const Text('設定'),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
       ),
       body: ListView(
         children: [
-          // ── データ ────────────────────────────────
-          _buildSectionTitle('データ'),
+          // ── データ設定 ─────────────────────────────
+          _buildSectionTitle(context, 'データ'),
           _buildSettingTile(
+            context: context,
             icon: Icons.backup,
             title: 'バックアップ / 復元',
             subtitle: 'メモをエクスポート・インポートする',
             onTap: () {
-              // TODO: バックアップ画面へ遷移/広告をつける
+              // TODO: 実装
             },
           ),
           _buildSettingTile(
+            context: context,
             icon: Icons.delete_forever,
             title: 'すべてのメモを削除',
-            titleColor: Colors.red,
+            // 赤色 (Error Color) を使う
+            titleColor: colorScheme.error,
             onTap: () {
-              // TODO: 確認ダイアログを出して全削除
+              // TODO: 実装
             },
           ),
           const Divider(),
 
-          // ── サポート ─────────────────────────────
-          _buildSectionTitle('サポート'),
+          // ── サポート ──────────────────────────────
+          _buildSectionTitle(context, 'サポート'),
           _buildSettingTile(
+            context: context,
             icon: Icons.mail_outline,
             title: 'お問い合わせ・ご要望',
-            onTap: () {
-              // TODO: mailto: か お問い合わせ画面へ
+
+            onTap: () async {
+              final url = Uri.parse(AppUrls.contactForm);
+              if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+                debugPrint('Could not launch $url');
+              }
             },
           ),
           _buildSettingTile(
+            context: context,
             icon: Icons.star_rate,
             title: 'レビューを書く',
             onTap: () {
-              // TODO: ストアのレビュー画面へ遷移
+              // TODO: 実装
             },
           ),
           const Divider(),
 
-          // ── アプリ情報 ────────────────────────────
-          _buildSectionTitle('アプリ情報'),
+          // ── アプリ情報 ─────────────────────────────
+          _buildSectionTitle(context, 'アプリ情報'),
           _buildSettingTile(
+            context: context,
             icon: Icons.description,
             title: '利用規約',
-            onTap: () {
-              // TODO: WebView or ブラウザで表示
-            },
+            onTap: () {},
           ),
           _buildSettingTile(
+            context: context,
             icon: Icons.privacy_tip,
             title: 'プライバシーポリシー',
-            onTap: () {
-              // TODO: WebView or ブラウザで表示
-            },
+            onTap: () {},
           ),
           _buildSettingTile(
+            context: context,
             icon: Icons.info_outline,
             title: 'バージョン',
-            subtitle: '1.0.0', // TODO: package_info_plus で動的取得
+            subtitle: '1.0.0',
             onTap: () {},
           ),
           const SizedBox(height: 32),
@@ -96,47 +95,58 @@ class SettingScreen extends StatelessWidget {
   }
 
   /// セクションタイトル
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(BuildContext context, String title) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
       child: Text(
         title,
-        style: GoogleFonts.notoSans(
-          fontSize: 14,
+        // テーマの「小さめの文字スタイル」を適用
+        style: theme.textTheme.bodySmall?.copyWith(
           fontWeight: FontWeight.bold,
-          color: Colors.grey[600],
+          color: theme.colorScheme.onSurfaceVariant, // 少し薄い色
         ),
       ),
     );
   }
 
-  /// 通常の設定タイル
+  /// 設定項目タイル
   Widget _buildSettingTile({
+    required BuildContext context,
     required IconData icon,
     required String title,
     String? subtitle,
     Color? titleColor,
     required VoidCallback onTap,
   }) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return ListTile(
-      leading: Icon(icon, color: titleColor ?? Colors.black),
+      leading: Icon(
+        icon,
+        // 指定がなければテーマの基本色を使う
+        color: colorScheme.onSurface,
+      ),
       title: Text(
         title,
-        style: GoogleFonts.notoSans(
-          fontSize: 16,
-          color: titleColor ?? Colors.black,
+        // テーマの「本文スタイル」を使う, 色だけ変更（これでフォントも適用される）
+        style: theme.textTheme.bodyLarge?.copyWith(
+          color: colorScheme.onSurface,
         ),
       ),
       subtitle: subtitle != null
           ? Text(
               subtitle,
-              style: GoogleFonts.notoSans(
-                fontSize: 14,
-                color: Colors.grey[600],
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
               ),
             )
           : null,
-      trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+      trailing: Icon(
+        Icons.chevron_right,
+        color: colorScheme.onSurfaceVariant, // 薄いグレー
+      ),
       onTap: onTap,
     );
   }

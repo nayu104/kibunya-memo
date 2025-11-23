@@ -19,4 +19,7 @@ class AppColors {
   // 文字色：真っ黒ではなく、濃い焦げ茶（カフェ風）
   static const textMain = Color(0xFF4E342E);
   static const textSub = Color(0xFF8D6E63);
+
+  static const delete = Color(0xFFFF8F00);
+  static const onDelete = Colors.white; // その上のアイコン色
 }
