@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:memomemo/core/constants/app_urls.dart';
+import 'package:memomemo/core/app_colors.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
@@ -26,7 +27,6 @@ class SettingScreen extends StatelessWidget {
             context: context,
             icon: Icons.backup,
             title: 'バックアップ / 復元',
-            subtitle: 'メモをエクスポート・インポートする',
             onTap: () {
               // TODO: 実装
             },
@@ -36,7 +36,7 @@ class SettingScreen extends StatelessWidget {
             icon: Icons.delete_forever,
             title: 'すべてのメモを削除',
             // 赤色 (Error Color) を使う
-            titleColor: colorScheme.error,
+            titleColor: AppColors.delete,
             onTap: () {
               // TODO: 実装
             },
@@ -130,16 +130,16 @@ class SettingScreen extends StatelessWidget {
       ),
       title: Text(
         title,
-        // テーマの「本文スタイル」を使う, 色だけ変更（これでフォントも適用される）
+        // // テーマの「本文スタイル」を使う, 色だけ変更（これでフォントも適用される）
         style: theme.textTheme.bodyLarge?.copyWith(
-          color: colorScheme.onSurface,
+          color: titleColor ?? colorScheme.onSurface,
         ),
       ),
       subtitle: subtitle != null
           ? Text(
               subtitle,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
+                color: titleColor ?? colorScheme.onSurface,
               ),
             )
           : null,

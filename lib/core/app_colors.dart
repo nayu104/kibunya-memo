@@ -8,7 +8,7 @@ class AppColors {
   static const scaffold = Color(0xFFFDFBF7);
 
   // FAB：焼いたオレンジ（アクセント）
-  static const fab = Color(0xFFFF8F00);
+  static const fab = Color(0xFF4E342E);
 
   // 気分メモ：少し彩度を落としたパステル
   static const moodHappy = Color(0xFFFFE082); // 優しい黄色

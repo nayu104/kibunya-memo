@@ -55,14 +55,7 @@ class MemoCard extends ConsumerWidget {
             padding: const EdgeInsets.all(12),
             child: Row(
               children: [
-                Container(
-                  width: 14,
-                  height: 14,
-                  decoration: BoxDecoration(
-                    color: memo.mood.color,
-                    shape: BoxShape.circle,
-                  ),
-                ),
+                Text(memo.mood.emoji, style: const TextStyle(fontSize: 24)),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
