@@ -1,1 +1,55 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"memomemo-a4659","appId":"1:1030457040174:android:4266d93490b66f4166eebf","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"memomemo-a4659","appId":"1:1030457040174:ios:6f581061c3ec673566eebf","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"macos":{"default":{"projectId":"memomemo-a4659","appId":"1:1030457040174:ios:6f581061c3ec673566eebf","uploadDebugSymbols":false,"fileOutput":"macos/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"memomemo-a4659","configurations":{"android":"1:1030457040174:android:4266d93490b66f4166eebf","ios":"1:1030457040174:ios:6f581061c3ec673566eebf","macos":"1:1030457040174:ios:6f581061c3ec673566eebf","web":"1:1030457040174:web:ef61597615f6164d66eebf","windows":"1:1030457040174:web:9c1a1889d72f24b466eebf"}}}}}}
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "memomemo-a4659",
+                    "appId": "1:1030457040174:android:4266d93490b66f4166eebf",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "ios": {
+                "default": {
+                    "projectId": "memomemo-a4659",
+                    "appId": "1:1030457040174:ios:6f581061c3ec673566eebf",
+                    "uploadDebugSymbols": false,
+                    "fileOutput": "ios/Runner/GoogleService-Info.plist"
+                }
+            },
+            "macos": {
+                "default": {
+                    "projectId": "memomemo-a4659",
+                    "appId": "1:1030457040174:ios:6f581061c3ec673566eebf",
+                    "uploadDebugSymbols": false,
+                    "fileOutput": "macos/Runner/GoogleService-Info.plist"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "memomemo-a4659",
+                    "configurations": {
+                        "android": "1:1030457040174:android:4266d93490b66f4166eebf",
+                        "ios": "1:1030457040174:ios:6f581061c3ec673566eebf",
+                        "macos": "1:1030457040174:ios:6f581061c3ec673566eebf",
+                        "web": "1:1030457040174:web:ef61597615f6164d66eebf",
+                        "windows": "1:1030457040174:web:9c1a1889d72f24b466eebf"
+                    }
+                }
+            }
+        }
+    },
+    "hosting": {
+        "public": "build/web",
+        "ignore": [
+            "firebase.json",
+            "**/.*",
+            "**/node_modules/**"
+        ],
+        "rewrites": [
+            {
+                "source": "**",
+                "destination": "/index.html"
+            }
+        ]
+    }
+}

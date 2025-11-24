@@ -21,6 +21,8 @@ dependencies:
   flutter_riverpod: ^3.0.3
   firebase_core: ^4.2.1
   firebase_crashlytics: ^5.0.5
+  firebase_auth: ^6.1.2
+  cloud_firestore: ^6.1.0
   
 dev_dependencies:
   json_serializable: ^6.7.1

@@ -127,19 +127,21 @@ class SettingScreen extends ConsumerWidget {
           ),
           _buildSettingTile(
             context: context,
-            icon: Icons.privacy_tip,
-            title: 'クラッシュテスト',
-            onTap: () {
-              Crashlytics.log('ログ');
-              Crashlytics.crash('クラッシュテスト');
-            },
-          ),
-          _buildSettingTile(
-            context: context,
             icon: Icons.info_outline,
             title: 'バージョン',
             subtitle: '1.0.0',
             onTap: () {},
+          ),
+          const Divider(),
+          _buildSettingTile(
+            context: context,
+            icon: Icons.bug_report,
+            title: 'クラッシュテスト',
+            titleColor: Theme.of(context).colorScheme.error,
+            onTap: () {
+              Crashlytics.log('ログ');
+              Crashlytics.crash('アプリクラッシュテスト');
+            },
           ),
           const SizedBox(height: 32),
         ],
