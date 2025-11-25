@@ -22,7 +22,6 @@ class _NewMemoModalState extends ConsumerState<NewMemoModal> {
     final initial = widget.initial;
     if (initial != null) {
       _selected = initial.mood;
-      // TitleがないのでBodyをセット
       _controller.text = initial.body;
     }
   }
@@ -33,8 +32,6 @@ class _NewMemoModalState extends ConsumerState<NewMemoModal> {
 
     return Scaffold(
       appBar: AppBar(
-        // backgroundColor: Colors.white, // 削除（テーマに従う）
-        // elevation: 0, // 削除（テーマに従う）
         leadingWidth: 100,
         leading: TextButton(
           onPressed: () => navigator.pop(),
@@ -49,10 +46,8 @@ class _NewMemoModalState extends ConsumerState<NewMemoModal> {
               final notifier = ref.read(memoNotifierProvider.notifier);
 
               if (widget.initial == null) {
-                // 新規作成 (Bodyのみ)
                 await notifier.add(body: text, mood: _selected);
               } else {
-                // 更新 (updateMemoを使用)
                 final updated = widget.initial!.copyWith(
                   body: text,
                   mood: _selected,
@@ -90,9 +85,9 @@ class _NewMemoModalState extends ConsumerState<NewMemoModal> {
                 final selected = m == _selected;
                 return ChoiceChip(
                   label: Text('${m.emoji} ${m.label}'),
-                  selected: selected,
+                  selected: selected, // ここで選択状態を指定
                   onSelected: (_) => setState(() => _selected = m),
-                  selectedColor: m.color.withAlpha(200),
+                  selectedColor: m.color.withAlpha(200), // ここで色を変える
                   backgroundColor: Colors.white,
                 );
               }).toList(),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/provider/memo_state.dart';
 import '../widgets/memo_card.dart';
-import '../widgets/new_memo_modal.dart';
+import 'new_memo_modal.dart';
 import 'setting_screen.dart';
 
 class MemoListScreen extends ConsumerWidget {

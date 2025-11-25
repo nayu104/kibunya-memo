@@ -26,5 +26,6 @@ class Memo with _$Memo {
     final now = DateTime.now();
     return Memo(id: id, body: body, mood: mood, createdAt: now, updatedAt: now);
   }
+  // JSON手書き回避のためのコード
   factory Memo.fromJson(Map<String, dynamic> json) => _$MemoFromJson(json);
 }

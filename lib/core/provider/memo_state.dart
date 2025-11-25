@@ -13,15 +13,22 @@ final memoNotifierProvider = AsyncNotifierProvider<MemoNotifier, List<Memo>>(
 );
 
 class MemoNotifier extends AsyncNotifier<List<Memo>> {
-  /// 初期化処理（コンストラクタの代わり）
-  /// このプロバイダーが初めて呼ばれた時に実行され、初期データをロードします。
+  Future<void> backupToCloud() async {
+    final currentList = state.value ?? [];
+
+    if (currentList.isEmpty) return;
+
+    final repository = ref.read(memoRepositoryProvider);
+    await repository.saveToCloud(currentList);
+  }
+
+  /// 初期データをロードします。
   @override
   Future<List<Memo>> build() async {
     return _fetchAll();
   }
 
-  /// 内部ヘルパー: リポジトリからデータを全件取得
-  /// ref.read を使うことで、DI（依存性の注入）されたリポジトリにアクセスします。
+  /// リポジトリからデータを全件取得
   List<Memo> _fetchAll() {
     final repository = ref.read(memoRepositoryProvider);
     return repository.fetchAll();

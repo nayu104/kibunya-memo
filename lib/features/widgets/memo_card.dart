@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memomemo/core/domain/memo.dart';
 import 'package:memomemo/core/domain/mood.dart';
 import '../../core/provider/memo_state.dart';
-import '../widgets/new_memo_modal.dart';
+import '../screens/new_memo_modal.dart';
 import '../../core/app_colors.dart';
 
 class MemoCard extends ConsumerWidget {

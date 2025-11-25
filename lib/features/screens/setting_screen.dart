@@ -30,8 +30,31 @@ class SettingScreen extends ConsumerWidget {
             context: context,
             icon: Icons.backup,
             title: 'バックアップ / 復元',
-            onTap: () {
-              // TODO: 実装
+            onTap: () async {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('クラウドに保存しています...')));
+              try {
+                await ref.read(memoNotifierProvider.notifier).backupToCloud();
+                if (context.mounted) {
+                  // 前のスナックバーを消してから新しいのを出す
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(const SnackBar(content: Text('保存しました！')));
+                }
+              } catch (e) {
+                // 4. 失敗フィードバック
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('保存に失敗しました'),
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                    ),
+                  );
+                }
+              }
             },
           ),
           _buildSettingTile(
