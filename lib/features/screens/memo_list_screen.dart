@@ -19,6 +19,7 @@ class MemoListScreen extends ConsumerWidget {
         title: const Text('気分でメモメモ'),
         actions: [
           IconButton(
+            tooltip: '設定画面を開くボタン',
             onPressed: () {
               Navigator.of(
                 context,
@@ -87,6 +88,7 @@ class MemoListScreen extends ConsumerWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: '新しいメモを作成するボタン',
         onPressed: () => _openNewMemo(context),
         child: const Icon(Icons.add, color: Colors.white), // アイコン白の方が見やすいかも
       ),

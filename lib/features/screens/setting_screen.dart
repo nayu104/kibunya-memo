@@ -19,6 +19,7 @@ class SettingScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('設定'),
         leading: IconButton(
+          tooltip: '設定画面を閉じるボタン',
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.pop(context),
         ),
