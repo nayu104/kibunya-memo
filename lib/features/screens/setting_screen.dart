@@ -19,7 +19,7 @@ class SettingScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('設定'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.pop(context),
         ),
       ),
