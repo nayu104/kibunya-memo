@@ -12,6 +12,11 @@ class MemoCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // メモの本文を改行で分割し、リスト化
+    final lines = memo.body.split('\n');
+    final firstLine = lines.isNotEmpty ? lines[0] : '';
+    final secondLine = lines.length > 1 ? lines.sublist(1).join(' ') : '';
+
     return Dismissible(
       key: ValueKey(memo.id),
       direction: DismissDirection.endToStart,
@@ -62,7 +67,7 @@ class MemoCard extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        memo.body,
+                        firstLine,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -70,6 +75,19 @@ class MemoCard extends ConsumerWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
+                      // ...[]はスプレッド構文。条件付きでウィジェットを追加するために使う
+                      if (secondLine.isNotEmpty) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          secondLine,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
                       const SizedBox(height: 6),
                       Text(
                         _formatDate(memo.updatedAt),
