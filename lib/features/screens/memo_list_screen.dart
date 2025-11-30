@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memomemo/gen/assets.gen.dart';
 import '../../core/provider/memo_state.dart';
+import '../../core/provider/search_state.dart';
 import '../widgets/memo_card.dart';
 import 'new_memo_modal.dart';
 import 'setting_screen.dart';
@@ -13,6 +14,7 @@ class MemoListScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Riverpodの状態監視 (AsyncValue<List<Memo>>)
     final asyncMemos = ref.watch(memoNotifierProvider);
+    final searchQuery = ref.watch(searchQueryProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -35,14 +37,17 @@ class MemoListScreen extends ConsumerWidget {
           // 検索バー (機能は未実装の見た目だけ)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const ListTile(
-                leading: Icon(Icons.search, color: Colors.black38),
-                title: Text('検索', style: TextStyle(color: Colors.black38)),
+            child: TextField(
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search, color: Colors.black38),
+                hintText: 'けんさく',
+                hintStyle: const TextStyle(color: Colors.black38),
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none,
+                ),
               ),
             ),
           ),
