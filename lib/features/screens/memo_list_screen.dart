@@ -7,11 +7,29 @@ import '../widgets/memo_card.dart';
 import 'new_memo_modal.dart';
 import 'setting_screen.dart';
 
-class MemoListScreen extends ConsumerWidget {
+class MemoListScreen extends ConsumerStatefulWidget {
   const MemoListScreen({super.key});
+  @override
+  ConsumerState<MemoListScreen> createState() => _MemoListScreenState();
+}
+
+class _MemoListScreenState extends ConsumerState<MemoListScreen> {
+  late final TextEditingController _searchController;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     // Riverpodの状態監視 (AsyncValue<List<Memo>>)
     final asyncMemos = ref.watch(memoNotifierProvider);
     final searchQuery = ref.watch(searchQueryProvider);
@@ -47,6 +65,7 @@ class MemoListScreen extends ConsumerWidget {
                         icon: const Icon(Icons.clear),
                         onPressed: () {
                           ref.read(searchQueryProvider.notifier).state = '';
+                          _searchController.clear();
                         },
                       )
                     : null,
@@ -60,10 +79,6 @@ class MemoListScreen extends ConsumerWidget {
               onChanged: (value) {
                 ref.read(searchQueryProvider.notifier).state = value;
               },
-              controller: TextEditingController(text: searchQuery)
-                ..selection = TextSelection.fromPosition(
-                  TextPosition(offset: searchQuery.length),
-                ),
             ),
           ),
           const SizedBox(height: 12),
