@@ -5,6 +5,7 @@ import 'package:memomemo/core/constants/app_urls.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memomemo/core/provider/memo_state.dart';
 import 'package:memomemo/crashlytics.dart';
+import 'onboarding_screen.dart';
 
 class SettingScreen extends ConsumerWidget {
   const SettingScreen({super.key});
@@ -136,6 +137,18 @@ class SettingScreen extends ConsumerWidget {
 
           // ── アプリ情報 ─────────────────────────────
           _buildSectionTitle(context, 'アプリ情報'),
+          _buildSettingTile(
+            context: context,
+            icon: Icons.help_outline,
+            title: '使い方を見る',
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const OnboardingScreen(fromSettings: true),
+                ),
+              );
+            },
+          ),
           _buildSettingTile(
             context: context,
             icon: Icons.description,
