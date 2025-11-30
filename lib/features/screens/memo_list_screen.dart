@@ -42,6 +42,14 @@ class MemoListScreen extends ConsumerWidget {
                 prefixIcon: const Icon(Icons.search, color: Colors.black38),
                 hintText: 'けんさく',
                 hintStyle: const TextStyle(color: Colors.black38),
+                suffixIcon: searchQuery.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          ref.read(searchQueryProvider.notifier).state = '';
+                        },
+                      )
+                    : null,
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
@@ -49,6 +57,13 @@ class MemoListScreen extends ConsumerWidget {
                   borderSide: BorderSide.none,
                 ),
               ),
+              onChanged: (value) {
+                ref.read(searchQueryProvider.notifier).state = value;
+              },
+              controller: TextEditingController(text: searchQuery)
+                ..selection = TextSelection.fromPosition(
+                  TextPosition(offset: searchQuery.length),
+                ),
             ),
           ),
           const SizedBox(height: 12),
