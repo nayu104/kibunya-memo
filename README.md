@@ -1,5 +1,6 @@
 ## 気分屋専用のメモアプリ
 ### メモに気分を反映するだけのアプリ
+- 実行方法: flutter run
 
 デモ
 https://memomemo-a4659.web.app
