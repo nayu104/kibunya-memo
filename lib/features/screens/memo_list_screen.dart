@@ -52,10 +52,10 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 検索バー (機能は未実装の見た目だけ)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: TextField(
+              controller: _searchController,
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.search, color: Colors.black38),
                 hintText: 'けんさく',
@@ -98,25 +98,34 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
                 // Riverpodの状態による分岐
                 asyncMemos.when(
                   data: (items) {
-                    if (items.isEmpty) {
-                      return const Center(
+                    // 検索ワードでフィルタリング
+                    final filteredItems = items.where((memo) {
+                      final query = searchQuery.toLowerCase();
+                      return memo.body.toLowerCase().contains(query);
+                    }).toList();
+
+                    if (filteredItems.isEmpty) {
+                      return Center(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'メモルちゃんがメモを欲しそうに...',
-                              style: TextStyle(
+                              searchQuery.isEmpty
+                                  ? 'メモルちゃんがメモを欲しそうに...'
+                                  : 'みつかりませんでした',
+                              style: const TextStyle(
                                 fontSize: 18,
                                 color: Colors.black,
                               ),
                             ),
-                            Text(
-                              'さっそくメモを作成しましょう！',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.black,
+                            if (searchQuery.isEmpty)
+                              const Text(
+                                'さっそくメモを作成しましょう！',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.black,
+                                ),
                               ),
-                            ),
                           ],
                         ),
                       );
@@ -126,9 +135,9 @@ class _MemoListScreenState extends ConsumerState<MemoListScreen> {
                         horizontal: 16,
                         vertical: 8,
                       ),
-                      itemCount: items.length,
+                      itemCount: filteredItems.length,
                       itemBuilder: (context, index) =>
-                          MemoCard(memo: items[index]),
+                          MemoCard(memo: filteredItems[index]),
                       separatorBuilder: (_, __) => const SizedBox(height: 10),
                     );
                   },
