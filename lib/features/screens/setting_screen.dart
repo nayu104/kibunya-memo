@@ -32,83 +32,14 @@ class SettingScreen extends ConsumerWidget {
             context: context,
             icon: Icons.backup,
             title: 'バックアップ / 復元',
-            onTap: () async {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text('クラウドに保存しています...')));
-              try {
-                await ref.read(memoNotifierProvider.notifier).backupToCloud();
-                if (context.mounted) {
-                  // 前のスナックバーを消してから新しいのを出す
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(const SnackBar(content: Text('保存しました！')));
-                }
-              } catch (e) {
-                // 4. 失敗フィードバック
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('保存に失敗しました'),
-                      backgroundColor: Theme.of(context).colorScheme.error,
-                    ),
-                  );
-                }
-              }
-            },
+            onTap: () => _handleBackup(context, ref),
           ),
           _buildSettingTile(
             context: context,
             icon: Icons.delete_forever,
             title: 'すべてのメモを削除',
             titleColor: Theme.of(context).colorScheme.error,
-            onTap: () async {
-              // 1. ダイアログを表示し、ユーザーの決断を待つ (await)
-              // 削除なら true, キャンセルなら false (または null) が返ってくる
-              final shouldDelete = await showDialog<bool>(
-                context: context,
-                builder: (dialogContext) => AlertDialog(
-                  title: const Text('すべてのメモを削除'),
-                  content: const Text('本当にすべてのメモを削除しますか？\nこの操作は元に戻せません。'),
-                  actions: [
-                    TextButton(
-                      // キャンセルなら false を返して閉じる
-                      onPressed: () => Navigator.pop(dialogContext, false),
-                      child: const Text('キャンセル'),
-                    ),
-                    TextButton(
-                      // 削除なら true を返して閉じる
-                      onPressed: () => Navigator.pop(dialogContext, true),
-                      child: Text(
-                        '削除',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-
-              // 2. ダイアログが閉じた後の処理
-              // ユーザーが「削除」を選んだ場合のみ実行
-              if (shouldDelete == true) {
-                await ref.read(memoNotifierProvider.notifier).deleteAll();
-
-                // 3. フィードバックを表示 (SnackBar)
-                // 非同期処理の後なので、設定画面であるか確認(mounted)してから表示
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('すべてのメモを削除しました'),
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-                }
-              }
-            },
+            onTap: () => _handleDeleteAll(context, ref),
           ),
           const Divider(),
 
@@ -182,6 +113,77 @@ class SettingScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _handleBackup(BuildContext context, WidgetRef ref) async {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('クラウドに保存しています...')));
+    try {
+      await ref.read(memoNotifierProvider.notifier).backupToCloud();
+      if (context.mounted) {
+        // 前のスナックバーを消してから新しいのを出す
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('保存しました！')));
+      }
+    } catch (e) {
+      // 4. 失敗フィードバック
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('保存に失敗しました'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _handleDeleteAll(BuildContext context, WidgetRef ref) async {
+    // 1. ダイアログを表示し、ユーザーの決断を待つ (await)
+    // 削除なら true, キャンセルなら false (または null) が返ってくる
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('すべてのメモを削除'),
+        content: const Text('本当にすべてのメモを削除しますか？\nこの操作は元に戻せません。'),
+        actions: [
+          TextButton(
+            // キャンセルなら false を返して閉じる
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('キャンセル'),
+          ),
+          TextButton(
+            // 削除なら true を返して閉じる
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(
+              '削除',
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    // 2. ダイアログが閉じた後の処理
+    // ユーザーが「削除」を選んだ場合のみ実行
+    if (shouldDelete == true) {
+      await ref.read(memoNotifierProvider.notifier).deleteAll();
+
+      // 3. フィードバックを表示 (SnackBar)
+      // 非同期処理の後なので、設定画面であるか確認(mounted)してから表示
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('すべてのメモを削除しました'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
   }
 
   /// セクションタイトル
