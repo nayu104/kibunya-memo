@@ -39,7 +39,7 @@ class MemoCard extends ConsumerWidget {
               action: SnackBarAction(
                 label: '元に戻す',
                 onPressed: () {
-                  notifier.add(body: removedMemo.body, mood: removedMemo.mood);
+                  notifier.restore(removedMemo);
                 },
               ),
             ),

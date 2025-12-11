@@ -100,6 +100,19 @@ class MemoNotifier extends AsyncNotifier<List<Memo>> {
     return target; // 削除したデータを呼び出し元に返す
   }
 
+  /// 削除したメモを復元する
+  Future<void> restore(Memo memo) async {
+    final currentList = state.value ?? [];
+    // 同じメモが既にリスト内に存在する場合は除外してから先頭に追加する。
+    // SnackBarのアクションを連打しても重複しないようにするため。
+    final newList = [
+      memo,
+      ...currentList.where((existing) => existing.id != memo.id),
+    ];
+
+    await _saveAndRefresh(newList);
+  }
+
   Future<void> deleteAll() async {
     final repository = ref.read(memoRepositoryProvider);
     // 1. リポジトリに削除命令（スマホのデータを消す）

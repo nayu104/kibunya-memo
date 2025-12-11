@@ -60,4 +60,43 @@ void main() {
     final state = container.read(memoNotifierProvider);
     expect(state.value, isEmpty);
   });
+
+  test('削除したメモを復元でき、メタデータも保持されること', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final notifier = container.read(memoNotifierProvider.notifier);
+
+    await notifier.add(body: '復元メモ', mood: Mood.happy);
+    final original = container.read(memoNotifierProvider).value!.first;
+
+    final removed = await notifier.delete(original.id);
+    expect(removed, isNotNull);
+
+    await notifier.restore(removed!);
+
+    final restored = container.read(memoNotifierProvider).value!;
+    expect(restored, hasLength(1));
+    expect(restored.first.id, original.id);
+    expect(restored.first.createdAt, original.createdAt);
+    expect(restored.first.updatedAt, original.updatedAt);
+  });
+
+  test('同じメモを重複復元しないこと', () async {
+    final container = ProviderContainer();
+    addTearDown(container.dispose);
+    final notifier = container.read(memoNotifierProvider.notifier);
+
+    await notifier.add(body: '重複しない', mood: Mood.calm);
+    final memo = container.read(memoNotifierProvider).value!.first;
+
+    final removed = await notifier.delete(memo.id);
+    expect(removed, isNotNull);
+
+    await notifier.restore(removed!);
+    await notifier.restore(removed);
+
+    final restored = container.read(memoNotifierProvider).value!;
+    expect(restored, hasLength(1));
+    expect(restored.first.id, memo.id);
+  });
 }
